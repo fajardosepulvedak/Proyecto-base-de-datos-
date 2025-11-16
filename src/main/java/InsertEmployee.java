@@ -15,7 +15,7 @@ import java.util.HashMap;
  *
  * @author Maestro
  */
-public class InsertHouses extends javax.swing.JDialog {
+public class InsertEmployee extends javax.swing.JDialog {
 
     /**
      * Creates new form InsertHouses
@@ -23,7 +23,7 @@ public class InsertHouses extends javax.swing.JDialog {
     private final HashMap ht;
     private final Database db;
 
-    public InsertHouses(java.awt.Frame parent, Database db) {
+    public InsertEmployee(java.awt.Frame parent, Database db) {
         super(parent, true);
         initComponents();
         this.db = db;

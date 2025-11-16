@@ -375,7 +375,7 @@ public class MainApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        InsertHouses dialogo = new InsertHouses(this, db);
+        InsertEmployee dialogo = new InsertEmployee(this, db);
         dialogo.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -385,7 +385,7 @@ public class MainApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        InsertHouses dialogo = new InsertHouses(this, db);
+        InsertEmployee dialogo = new InsertEmployee(this, db);
         dialogo.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
