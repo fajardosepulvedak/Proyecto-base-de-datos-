@@ -1,0 +1,7 @@
+CorrelationId: dd097567-7205-4761-ac14-216add48fe6b
+UTC DateTime: 10/23/2025 18:34:40
+
+The following files/folders have not been downloaded
+0. coffee_crud/.gradle/7.1/gc.properties
+1. coffee_crud/.gradle/7.1/dependencies-accessors/gc.properties
+2. coffee_crud/.gradle/vcs-1/gc.properties
