@@ -385,7 +385,7 @@ public class MainApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        InsertEmployee dialogo = new InsertEmployee(this, db);
+        InsertProject dialogo = new InsertProject(this, db);
         dialogo.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
