@@ -216,10 +216,8 @@ public class InsertEmployeesAddresses extends JDialog{
             Database db = Database.getDatabase("kevin", "Mark4557");
 
             // Ejecutar consulta
-            ResultSet rs = db.query("SELECT e.* " +
-                    "FROM employees e " +
-                    "LEFT JOIN employee_addresses ea ON e.employee_id = ea.employee_id " +
-                    "WHERE ea.address_id IS NULL;");
+            ResultSet rs = db.query("SELECT first_name, employee_id FROM employees as emp WHERE NOT EXISTS " +
+                    "(SELECT employee_id FROM employee_addresses as empAd WHERE emp.employee_id = empAd.employee_id)");
 
             // Limpiar combo antes de llenarlo
             comboEmployee.removeAllItems();
