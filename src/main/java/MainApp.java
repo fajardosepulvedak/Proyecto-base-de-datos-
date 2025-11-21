@@ -212,7 +212,7 @@ public class MainApp extends javax.swing.JFrame {
         });
         menuInsertar.add(jMenuItem1);
 
-        jMenuItem2.setText("Cafeterias");
+        jMenuItem2.setText("Projects");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -220,7 +220,12 @@ public class MainApp extends javax.swing.JFrame {
         });
         menuInsertar.add(jMenuItem2);
 
-        jMenuItem3.setText("Proveedores");
+        jMenuItem3.setText("Employee Addresses");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         menuInsertar.add(jMenuItem3);
 
         jMenuItem4.setText("Inventario café");
@@ -276,7 +281,7 @@ public class MainApp extends javax.swing.JFrame {
 
         menuDelete.setText("Borrar");
 
-        jMenuItem11.setText("Café");
+        jMenuItem11.setText("Employee");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem11ActionPerformed(evt);
@@ -379,8 +384,13 @@ public class MainApp extends javax.swing.JFrame {
         dialogo.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        InsertEmployeesAddresses dia = new InsertEmployeesAddresses(this,db);
+        dia.setVisible(true);
+    }
+
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        DeleteCoffeeDialog dialog = new DeleteCoffeeDialog(new javax.swing.JFrame(), db);
+        DeleteEmployeeDialog dialog = new DeleteEmployeeDialog(new javax.swing.JFrame(), db);
         dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 

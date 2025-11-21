@@ -2,11 +2,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 public class DeleteEmployeeDialog extends javax.swing.JDialog {
 
@@ -148,9 +144,10 @@ public class DeleteEmployeeDialog extends javax.swing.JDialog {
             System.out.println(sql);
 
             db.update(sql);
-
+            JOptionPane.showMessageDialog(this, "Employee delete");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error");
         }
         doClose(RET_OK);
     }

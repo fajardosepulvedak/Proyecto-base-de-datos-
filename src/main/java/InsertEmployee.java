@@ -50,8 +50,8 @@ public class InsertEmployee extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         txtFname = new javax.swing.JTextField();
         txtLname = new javax.swing.JTextField();
-        txtBirth = new javax.swing.JTextField();
-        txtHire = new javax.swing.JTextField();
+        txtBirth = new javax.swing.JTextField("DD-MM-YYYY");
+        txtHire = new javax.swing.JTextField("DD-MM-YYYY");
         txtSalary = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
@@ -133,6 +133,11 @@ public class InsertEmployee extends javax.swing.JDialog {
 
         cancelButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cancelButton.setText("Cancelar");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setVisible(false);
+            }
+        });
 /*
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

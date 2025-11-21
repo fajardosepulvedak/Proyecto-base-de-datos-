@@ -232,7 +232,7 @@ public class InsertCoffeesDialog extends javax.swing.JDialog {
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
         String text = txtNombre.getText().trim();
         if (text.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Introducir el nombre del café.");
+//            JOptionPane.showMessageDialog(this, "Introducir el nombre del café.");
         }
     }//GEN-LAST:event_txtNombreFocusLost
 

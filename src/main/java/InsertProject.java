@@ -39,8 +39,8 @@ public class InsertProject extends javax.swing.JDialog{
         jLabel6 = new JLabel();
         txtClientId = new JTextField();
         txtPname = new JTextField();
-        txtPStartDate = new JTextField();
-        txtPEndDate = new JTextField();
+        txtPStartDate = new JTextField("DD-MM-YYYY");
+        txtPEndDate = new JTextField("DD-MM-YYYY");
         txtPbudget = new JTextField();
         txtPdescription = new JTextArea();
         btnInsertar = new JButton();
@@ -90,15 +90,15 @@ public class InsertProject extends javax.swing.JDialog{
         btnInsertar.setText("Aceptar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-
+                okButtonActionPerformed(evt);
             }
         });
 
         btnCancelar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
-        btnInsertar.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-
+                setVisible(false);
             }
         });
 
@@ -158,5 +158,52 @@ public class InsertProject extends javax.swing.JDialog{
         );
 
         pack();
+        
     }
-}
+    
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        int clientId= Integer.parseInt(txtClientId.getText());
+        String Pname = txtPname.getText();
+        String startDate = txtPStartDate.getText();
+        String endDate= txtPEndDate.getText();
+        double budget = Double.parseDouble(txtPbudget.getText());
+        String description = txtPdescription.getText();
+
+        StringBuilder sql
+                = new StringBuilder("INSERT INTO projects (client_id, project_name, project_start_date, project_end_date, project_status, project_budget, project_description) " +
+                "VALUES (");
+        sql.append(clientId);
+        sql.append(",");
+        sql.append("\'");
+        sql.append(Pname);
+        sql.append("\',");
+        sql.append("\'");
+        sql.append(startDate);
+        sql.append("\',");
+        sql.append("\'");
+        sql.append(endDate);
+        sql.append("\',");
+        sql.append("\'");
+        sql.append("Active");
+        sql.append("\',");
+        sql.append(budget);
+        sql.append(",");
+        sql.append("\'");
+        sql.append(description);
+        sql.append("\'");
+        sql.append(")");
+
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Project added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+    }
+
