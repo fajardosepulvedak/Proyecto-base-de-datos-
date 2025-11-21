@@ -64,7 +64,9 @@ public class MainApp extends javax.swing.JFrame {
         //Abrir la conexión a la base de datos
         db = Database.getDatabase(USER, PASS);
         initComponents();
-        this.setSize(800, 600);
+        this.setTitle("Employees working at home");
+        this.setSize(1000, 650);
+        this.setLocationRelativeTo(null);
     }
 
     /**
