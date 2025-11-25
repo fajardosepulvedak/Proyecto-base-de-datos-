@@ -42,7 +42,7 @@ public class CoffeesTableListener implements TableModelListener  {
         String colName = modelo.getColumnName(column);
         String colSQLName = modelo.getSQLColumnName(column);        
         String sql = String.format(
-                "UPDATE coffees SET %s = %s WHERE COF_NAME = \'%s\'",
+                "UPDATE coffees SET %s = %s WHERE COF_NAME = |\'%s\'",
                 colSQLName,modelo.getValueAt(row, column), modelo.getValueAt(row, 0));
         LOGGER.info( sql );
         
