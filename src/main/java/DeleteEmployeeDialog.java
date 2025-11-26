@@ -1,8 +1,8 @@
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.*;
 
 public class DeleteEmployeeDialog extends javax.swing.JDialog {
 
@@ -76,14 +76,14 @@ public class DeleteEmployeeDialog extends javax.swing.JDialog {
 
         okButton.setText("Eliminar");
         okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
         cancelButton.setText("Cancelar");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -132,7 +132,7 @@ public class DeleteEmployeeDialog extends javax.swing.JDialog {
         pack();
     }
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void okButtonActionPerformed(ActionEvent evt) {
         try {
             // Valor seleccionado: "3 - Carlos Sas"
             String selected = comboEmployees.getSelectedItem().toString();
@@ -144,15 +144,14 @@ public class DeleteEmployeeDialog extends javax.swing.JDialog {
             System.out.println(sql);
 
             db.update(sql);
-            JOptionPane.showMessageDialog(this, "Employee delete");
+
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Error");
         }
         doClose(RET_OK);
     }
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void cancelButtonActionPerformed(ActionEvent evt) {
         doClose(RET_CANCEL);
     }
 

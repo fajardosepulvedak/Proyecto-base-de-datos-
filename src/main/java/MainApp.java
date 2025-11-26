@@ -484,8 +484,8 @@ public class MainApp extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        DeleteCoffeeHousesDialog dialog = new DeleteCoffeeHousesDialog(this, db);
-        dialog.setVisible(true);
+        //DeleteCoffeeHousesDialog dialog = new DeleteCoffeeHousesDialog(this, db);
+        //dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
