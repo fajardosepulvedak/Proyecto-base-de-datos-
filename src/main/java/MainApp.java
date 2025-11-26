@@ -1,501 +1,219 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-/**
- * @author Maestro
- */
-public class MainApp extends javax.swing.JFrame {
+public class MainApp extends JFrame {
 
-    private static final String CLASS_NAME = MainApp.class.getSimpleName();
-    private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
+    private static final Logger LOGGER = Logger.getLogger(MainApp.class.getSimpleName());
 
-    //private final String USER = "usr210215739";
-    //private final String PASS = "pw210215739";
     private final String USER = "kevin";
     private final String PASS = "Mark4557";
-    final private Database db;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem15;
-    private javax.swing.JMenuItem jMenuItem16;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
-    private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenu menuBrowse;
-    private javax.swing.JMenu menuDelete;
-    private javax.swing.JMenu menuInsertar;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
-    /**
-     * Creates new form MainApp
-     */
+    private final Database db;
+
     public MainApp() {
-        //Abrir la conexión a la base de datos
         db = Database.getDatabase(USER, PASS);
-        initComponents();
-        this.setTitle("Employees working at home");
-        this.setSize(1000, 650);
-        this.setLocationRelativeTo(null);
+
+        setTitle("Main");
+        setSize(1100, 750);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("Employee Management Dashboard", SwingConstants.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        title.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        add(title, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel(new GridLayout(2, 3, 25, 25));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 25, 30, 25));
+        panel.setBackground(new Color(245, 245, 245));
+
+        panel.add(createCard("Empleados", this::openEmployeesMenu));
+        panel.add(createCard("Proyectos", this::openProjectsMenu));
+        panel.add(createCard("Direcciones", this::openAddressesMenu));
+        panel.add(createCard("Calendario", this::openCalendarMenu));
+        panel.add(createCard("Skills", this::openSkillsMenu));
+        panel.add(createCard("Roles", this::openRolesMenu));
+
+        add(panel, BorderLayout.CENTER);
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    private JPanel createCard(String title, Runnable action) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JLabel label = new JLabel(title, SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        label.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        card.add(label, BorderLayout.CENTER);
+
+        card.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                card.setBackground(new Color(230, 230, 230));
+                card.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 3));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                card.setBackground(Color.WHITE);
+                card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                action.run();
+            }
+        });
+
+        return card;
+    }
+
+    //SUBMENÚS
+
+    private void openEmployeesMenu() {
+        Object[] options = {
+                "Agregar empleado",
+                "Eliminar empleado",
+                "Eliminar habilidades de empleado",
+                "Eliminar asignación a proyecto",
+                "Ver empleados",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Empleados", options);
+
+        switch (ch) {
+            case 0 -> new InsertEmployee(this, db).setVisible(true);
+            case 1 -> new DeleteEmployeeDialog(this, db).setVisible(true);
+            case 2 -> new DeleteEmployeeSkillDialog(this, db).setVisible(true);
+            case 3 -> new DeleteEmployeeOnProjectDialog(this, db).setVisible(true);
+            case 4 -> browseTable("Employees", "SELECT * FROM employees");
+        }
+    }
+
+    private void openProjectsMenu() {
+        Object[] options = {
+                "Agregar proyecto",
+                "Eliminar proyecto",
+                "Ver proyectos",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Proyectos", options);
+
+        switch (ch) {
+            case 0 -> new InsertProject(this, db).setVisible(true);
+            case 1 -> new DeleteProjectDialog(this, db).setVisible(true);
+            case 2 -> browseTable("Projects", "SELECT * FROM projects");
+        }
+    }
+
+    private void openAddressesMenu() {
+        Object[] options = {
+                "Agregar dirección",
+                "Eliminar dirección",
+                "Ver direcciones",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Direcciones", options);
+
+        switch (ch) {
+            case 0 -> new InsertEmployeesAddresses(this, db).setVisible(true);
+            case 1 -> new DeleteAddressDialog(this, db).setVisible(true);
+            case 2 -> browseTable("Addresses", "SELECT * FROM addresses");
+        }
+    }
+
+    private void openCalendarMenu() {
+        Object[] options = {
+                "Insertar fecha",
+                "Eliminar fecha",
+                "Ver calendario",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Calendario", options);
+
+        switch (ch) {
+            case 0 -> JOptionPane.showMessageDialog(this, "Insertar fecha (falta)");
+            case 1 -> new DeleteCalendarDateDialog(this, db).setVisible(true);
+            case 2 -> browseTable("Calendar", "SELECT * FROM ref_calendar");
+        }
+    }
+
+    private void openSkillsMenu() {
+        Object[] options = {
+                "Agregar skill",
+                "Eliminar skill",
+                "Eliminar nivel de skill",
+                "Ver skills",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Skills", options);
+
+        switch (ch) {
+            case 0 -> JOptionPane.showMessageDialog(this, "Insertar skill (falta)");
+            case 1 -> new DeleteSkillDialog(this, db).setVisible(true);
+            case 2 -> new DeleteSkillLevelDialog(this, db).setVisible(true);
+            case 3 -> browseTable("Skills", "SELECT * FROM ref_skills");
+        }
+    }
+
+    private void openRolesMenu() {
+        Object[] options = {
+                "Agregar rol",
+                "Eliminar rol",
+                "Ver roles",
+                "Cancelar"
+        };
+
+        int ch = showMenu("Roles", options);
+
+        switch (ch) {
+            case 0 -> JOptionPane.showMessageDialog(this, "Insertar rol (falta)");
+            case 1 -> new DeleteProveedorDialog(this, db).setVisible(true);
+            case 2 -> browseTable("Roles", "SELECT * FROM ref_roles");
+        }
+    }
+
+    //UTILIDADES
+
+    private int showMenu(String title, Object[] options) {
+        return JOptionPane.showOptionDialog(
+                this,
+                "Seleccione una acción",
+                "Menú: " + title,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+    }
+
+    private void browseTable(String title, String query) {
+        try {
+            ResultSet rs = db.query(query);
+            JDBCTableAdapter model = new JDBCTableAdapter(rs);
+            TableBrowser browser = new TableBrowser(title, model);
+            browser.setVisible(true);
+        } catch (SQLException e) {
+            LOGGER.severe(e.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainApp().setVisible(true);
-            }
-        });
+        new MainApp().setVisible(true);
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        desktopPane = new javax.swing.JDesktopPane();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
-        menuInsertar = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        menuBrowse = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        menuDelete = new javax.swing.JMenu();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jMenuItem12 = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
-        jMenuItem15 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem16 = new javax.swing.JMenuItem();
-        jMenuItem13 = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        contentMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
-
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(openMenuItem);
-
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
-
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
-
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        editMenu.setMnemonic('e');
-        editMenu.setText("Editar");
-
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
-
-        menuInsertar.setText("Insertar");
-
-        jMenuItem1.setText("Employee");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        menuInsertar.add(jMenuItem1);
-
-        jMenuItem2.setText("Projects");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        menuInsertar.add(jMenuItem2);
-
-        jMenuItem3.setText("Employee Addresses");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        menuInsertar.add(jMenuItem3);
-
-        jMenuItem4.setText("Inventario café");
-        menuInsertar.add(jMenuItem4);
-
-        jMenuItem5.setText("Inventario mercancias");
-        menuInsertar.add(jMenuItem5);
-
-        menuBar.add(menuInsertar);
-
-        menuBrowse.setText("Browse");
-        menuBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuBrowseActionPerformed(evt);
-            }
-        });
-
-        jMenuItem6.setText("Employees");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        menuBrowse.add(jMenuItem6);
-
-        jMenuItem7.setText("Projects");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
-            }
-        });
-        menuBrowse.add(jMenuItem7);
-
-        jMenuItem8.setText("Addresses");
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
-            }
-        });
-        menuBrowse.add(jMenuItem8);
-
-        jMenuItem9.setText("Ref calendar");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
-            }
-        });
-        menuBrowse.add(jMenuItem9);
-
-
-
-        menuBar.add(menuBrowse);
-
-        menuDelete.setText("Borrar");
-
-        jMenuItem11.setText("Employee");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
-            }
-        });
-        menuDelete.add(jMenuItem11);
-
-        jMenuItem12.setText("Cafeterias");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
-            }
-        });
-        menuDelete.add(jMenuItem12);
-
-        jMenuItem14.setText("Inventario café");
-        menuDelete.add(jMenuItem14);
-
-        jMenuItem15.setText("Inventario mercancias");
-        menuDelete.add(jMenuItem15);
-
-        jMenu1.setText("Proveedores");
-
-        jMenuItem16.setText("Por clave");
-        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem16ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem16);
-
-        jMenuItem13.setText("Por nombre");
-        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem13ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem13);
-
-        menuDelete.add(jMenu1);
-
-        menuBar.add(menuDelete);
-
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
-
-        contentMenuItem.setMnemonic('c');
-        contentMenuItem.setText("Contents");
-        helpMenu.add(contentMenuItem);
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText("About");
-        helpMenu.add(aboutMenuItem);
-
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        final String sql = "SELECT * FROM employees";
-        try {
-            ResultSet rs = db.query(sql);
-
-            JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
-
-            modelo.addTableModelListener(new CoffeesTableListener(db));
-
-            TableBrowser browser = new TableBrowser("Employees", modelo);
-
-            browser.setVisible(true);
-
-            this.desktopPane.add(browser);
-
-        } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
-        }
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        InsertEmployee dialogo = new InsertEmployee(this, db);
-        dialogo.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        InsertEmployeesAddresses dia = new InsertEmployeesAddresses(this,db);
-        dia.setVisible(true);
-    }
-
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        DeleteEmployeeDialog dialog = new DeleteEmployeeDialog(new javax.swing.JFrame(), db);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        InsertProject dialogo = new InsertProject(this, db);
-        dialogo.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        final String sql = "SELECT * "
-                + "FROM projects";
-        try {
-            ResultSet rs = db.query(sql);
-
-            JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
-            TableBrowser browser = new TableBrowser("Cafeterias", modelo);
-            browser.setVisible(true);
-            this.desktopPane.add(browser);
-
-        } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
-
-        }
-
-
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
-
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        final String sql = "SELECT SUP_ID as ID,  SUP_NAME AS NOMBRE, STREET AS DIRECCION, CITY AS CIUDAD, STATE AS ESTADO, ZIP AS CP "
-                + "FROM SUPPLIERS";
-        try {
-            ResultSet rs = db.query(sql);
-
-            JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
-            TableBrowser browser = new TableBrowser("Proveedores", modelo);
-            browser.setVisible(true);
-            this.desktopPane.add(browser);
-
-        } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
-        }
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
-
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        final String sql = "SELECT WAREHOUSE_ID AS ID, SUP_ID AS PROVEEDOR, QUAN AS CANTIDAD, DATE_VAL AS FECHA "
-                + "FROM COF_INVENTORY";
-
-        try {
-            ResultSet rs = db.query(sql);
-
-            JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
-            TableBrowser browser = new TableBrowser("Inventario Café", modelo);
-            browser.setVisible(true);
-            this.desktopPane.add(browser);
-
-        } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
-        }
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
-
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        final String sql = "SELECT WAREHOUSE_ID AS ID, SUP_ID AS PROVEEDOR, QUAN AS CANTIDAD, DATE_VAL AS FECHA "
-                + "FROM COF_INVENTORY";
-
-        try {
-            ResultSet rs = db.query(sql);
-
-            JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
-            TableBrowser browser = new TableBrowser("Inventario Café", modelo);
-            browser.setVisible(true);
-            this.desktopPane.add(browser);
-
-        } catch (SQLException ex) {
-            LOGGER.severe("Error: " + ex.getMessage());
-            LOGGER.severe("Codigo : " + ex.getErrorCode());
-        }
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
-
-    private void menuBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBrowseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuBrowseActionPerformed
-
-    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        DeleteSuppliersDialog dialog = new DeleteSuppliersDialog(this, db);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_jMenuItem13ActionPerformed
-
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        //DeleteCoffeeHousesDialog dialog = new DeleteCoffeeHousesDialog(this, db);
-        //dialog.setVisible(true);
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
-
-    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
-        DeleteProveedorDialog dialogo = new DeleteProveedorDialog(this, db);
-        dialogo.setVisible(true);
-    }//GEN-LAST:event_jMenuItem16ActionPerformed
-
-    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_openMenuItemActionPerformed
-    // End of variables declaration//GEN-END:variables
-
 }
