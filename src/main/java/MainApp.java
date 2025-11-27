@@ -154,6 +154,7 @@ public class MainApp extends JFrame {
     private void openSkillsMenu() {
         Object[] options = {
                 "Agregar skill",
+                "Agregar skill level",
                 "Eliminar skill",
                 "Eliminar nivel de skill",
                 "Ver skills",
@@ -163,10 +164,11 @@ public class MainApp extends JFrame {
         int ch = showMenu("Skills", options);
 
         switch (ch) {
-            case 0 -> JOptionPane.showMessageDialog(this, "Insertar skill (falta)");
-            case 1 -> new DeleteSkillDialog(this, db).setVisible(true);
-            case 2 -> new DeleteSkillLevelDialog(this, db).setVisible(true);
-            case 3 -> browseTable("Skills", "SELECT * FROM ref_skills");
+            case 0 -> new InsertSkills(this, db).setVisible(true);
+            case 1 -> new InsertSkillLevel(this,db).setVisible(true);
+            case 2 -> new DeleteSkillDialog(this, db).setVisible(true);
+            case 3 -> new DeleteSkillLevelDialog(this, db).setVisible(true);
+            case 4 -> browseTable("Skills", "SELECT * FROM ref_skills");
         }
     }
 
@@ -181,7 +183,7 @@ public class MainApp extends JFrame {
         int ch = showMenu("Roles", options);
 
         switch (ch) {
-            case 0 -> JOptionPane.showMessageDialog(this, "Insertar rol (falta)");
+            case 0 -> new InsertRole(this,db).setVisible(true);
             case 1 -> new DeleteProveedorDialog(this, db).setVisible(true);
             case 2 -> browseTable("Roles", "SELECT * FROM ref_roles");
         }
