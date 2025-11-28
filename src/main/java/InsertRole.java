@@ -17,9 +17,9 @@ public class InsertRole extends javax.swing.JDialog{
 
     public InsertRole(java.awt.Frame parent, Database db){
         super(parent, true);
-        initComponents();
         this.db = db;
         ht = new HashMap<String, Integer>();
+        initComponents();
     }
 
     private void initComponents() {

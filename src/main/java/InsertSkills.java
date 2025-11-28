@@ -18,9 +18,9 @@ public class InsertSkills extends javax.swing.JDialog {
 
     public InsertSkills(java.awt.Frame parent, Database db){
         super(parent, true);
-        initComponents();
         this.db = db;
         ht = new HashMap<String, Integer>();
+        initComponents();
     }
     private void initComponents() {
         jlabel1=new JLabel();

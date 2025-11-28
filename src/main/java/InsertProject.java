@@ -10,9 +10,9 @@ public class InsertProject extends javax.swing.JDialog{
 
     public InsertProject(java.awt.Frame parent, Database db) {
         super(parent, true);
-        initComponents();
         this.db = db;
         ht = new HashMap<String, Integer>();
+        initComponents();
     }
 
     private JLabel jLabel1;

@@ -25,9 +25,10 @@ public class InsertEmployee extends javax.swing.JDialog {
 
     public InsertEmployee(java.awt.Frame parent, Database db) {
         super(parent, true);
-        initComponents();
         this.db = db;
         ht = new HashMap<String, Integer>();
+        initComponents();
+
     }
 
     /**
@@ -322,9 +323,6 @@ public class InsertEmployee extends javax.swing.JDialog {
     private ArrayList<String> obtenerRoles() {
         ArrayList<String> roles = new ArrayList<>();
         try {
-            // Conectar usando tu clase Database
-            Database db = Database.getDatabase("kevin", "Mark4557");
-
             // Ejecutar consulta
             ResultSet rs = db.query("SELECT DISTINCT role_name FROM ref_roles ORDER BY role_name ASC");
 
@@ -345,9 +343,6 @@ public class InsertEmployee extends javax.swing.JDialog {
     private ArrayList<Integer> obtenerSupervisor() {
         ArrayList<Integer> sup = new ArrayList<>();
         try {
-            // Conectar usando tu clase Database
-            Database db = Database.getDatabase("kevin", "Mark4557");
-
             // Ejecutar consulta
             ResultSet rs = db.query("SELECT DISTINCT employee_id FROM employees WHERE employee_id=1 or employee_id=2 or employee_id=3");
 

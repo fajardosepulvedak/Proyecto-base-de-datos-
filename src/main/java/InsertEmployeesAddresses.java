@@ -32,11 +32,10 @@ public class InsertEmployeesAddresses extends JDialog{
 
     public InsertEmployeesAddresses(java.awt.Frame parent, Database db) {
         super(parent, true);
-        initComponents();
-        obtenerEmployees();
         this.db = db;
         ht = new HashMap<String, Integer>();
-
+        initComponents();
+        obtenerEmployees();
     }
 
     private void initComponents() {
