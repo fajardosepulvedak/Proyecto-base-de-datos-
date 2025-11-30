@@ -7,6 +7,7 @@ import java.util.HashMap;
 public class InsertEmployeeSkills extends JDialog {
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
 
     private JLabel jlabel1;
     private JLabel jlabel2;
@@ -16,6 +17,7 @@ public class InsertEmployeeSkills extends JDialog {
     private JComboBox cmbskillLevel;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     public InsertEmployeeSkills(java.awt.Frame parent, Database db){
         super(parent, true);
@@ -36,6 +38,7 @@ public class InsertEmployeeSkills extends JDialog {
         cmbskillLevel =new JComboBox();
         btnCancelar=new JButton();
         btnInsertar=new JButton();
+        btnConfirmar=new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Employee skill");
@@ -55,7 +58,7 @@ public class InsertEmployeeSkills extends JDialog {
         cmbskillLevel.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -66,58 +69,110 @@ public class InsertEmployeeSkills extends JDialog {
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
 
-        // Configuración para el espaciado automático
+        // Activación de gestión automática de espacios
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        // 1. Diseño Horizontal (Filas): Define cómo se organizan los componentes
+        // en cada fila. Los componentes se agrupan horizontalmente.
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        // Columna de JLabels
                                         .addComponent(jlabel1)
                                         .addComponent(jlabel2)
-                                        .addComponent(jlabel3)
-                                        .addComponent(btnInsertar))
-                                .addGap(30, 30, 30)
+                                        .addComponent(jlabel3))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        // Columna de JComboBoxes
                                         .addComponent(cmbEmployee, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cmbskill, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cmbskillLevel, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnCancelar))
-                                .addGap(20, 20, 20))
+                                        .addComponent(cmbskillLevel, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                // Fila de botones, alineados a la derecha
+                                .addComponent(btnInsertar)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnConfirmar)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCancelar))
         );
 
-        // Agregamos un grupo paralelo para alinear los botones en la base
-        layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancelar, btnInsertar});
-
+        // 2. Diseño Vertical (Columnas): Define cómo se organizan los componentes
+        // en cada columna. Los componentes se apilan verticalmente.
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
+                                // Fila 1: Employee Label y ComboBox
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jlabel1)
                                         .addComponent(cmbEmployee, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                // Fila 2: Skill Label y ComboBox
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jlabel2)
                                         .addComponent(cmbskill, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                // Fila 3: Skill Level Label y ComboBox
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jlabel3)
                                         .addComponent(cmbskillLevel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(30, 30, 30)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                // Fila 4: Botones
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnInsertar)
-                                        .addComponent(btnCancelar))
-                                .addGap(20, 20, 20))
+                                        .addComponent(btnCancelar)
+                                        .addComponent(btnConfirmar)
+                                        .addComponent(btnInsertar)))
         );
 
         pack();
+    }
+
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Employee skill added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
     }
 
     private void okButtonActionPerformed(ActionEvent evt) {
@@ -136,18 +191,10 @@ public class InsertEmployeeSkills extends JDialog {
         sql.append(idSkill);
         sql.append(",");
         sql.append(idSkillLevel);
-        sql.append(")");
+        sql.append(");");
 
-        System.out.println( sql.toString() );
-
-        try {
-            db.update( sql.toString() );
-            JOptionPane.showMessageDialog(this, "Employee skill added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 
     private void obtenerEmployees() {

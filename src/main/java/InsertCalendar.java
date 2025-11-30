@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class InsertCalendar extends javax.swing.JDialog{
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
 
     private JLabel jlabel1;
     private JLabel jlabel2;
@@ -20,6 +21,7 @@ public class InsertCalendar extends javax.swing.JDialog{
     private JTextField txtDayName;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     public InsertCalendar(java.awt.Frame parent, Database db){
         super(parent, true);
@@ -39,6 +41,7 @@ public class InsertCalendar extends javax.swing.JDialog{
         txtDayName = new JTextField();
         btnCancelar = new JButton();
         btnInsertar = new JButton();
+        btnConfirmar = new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Calendar");
@@ -63,7 +66,7 @@ public class InsertCalendar extends javax.swing.JDialog{
         txtDayName.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -74,7 +77,15 @@ public class InsertCalendar extends javax.swing.JDialog{
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -104,6 +115,8 @@ public class InsertCalendar extends javax.swing.JDialog{
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE) // Empuja los botones a la derecha
                                 .addComponent(btnInsertar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) // Espacio entre botones
+                                .addComponent(btnConfirmar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnCancelar)
                                 .addGap(20, 20, 20)) // Margen derecho para botones
         );
@@ -135,11 +148,46 @@ public class InsertCalendar extends javax.swing.JDialog{
                                 // Fila 5: Botones
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnCancelar)
+                                        .addComponent(btnConfirmar)
                                         .addComponent(btnInsertar))
                                 .addContainerGap(20, Short.MAX_VALUE)) // Margen inferior
         );
 
         pack();
+    }
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Calendar added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
     }
 
     private void okButtonActionPerformed(ActionEvent evt) {
@@ -163,18 +211,9 @@ public class InsertCalendar extends javax.swing.JDialog{
         sql.append("\'");
         sql.append(dayName);
         sql.append("\'");
-        sql.append(")");
+        sql.append(");");
 
-        System.out.println( sql.toString() );
-
-        try {
-            db.update( sql.toString() );
-            JOptionPane.showMessageDialog(this, "Calendar added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
-
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 }

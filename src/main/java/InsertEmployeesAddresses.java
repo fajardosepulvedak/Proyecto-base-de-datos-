@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 public class InsertEmployeesAddresses extends JDialog{
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
+    private StringBuilder sqlFinal2;
 
     private JLabel jLabel1;
     private JLabel jLabel2;
@@ -29,6 +32,7 @@ public class InsertEmployeesAddresses extends JDialog{
     private JTextField txtDateTo;
     private JButton btnCancelar;
     private JButton btnInsertar;
+    private JButton btnConfirmar;
 
     public InsertEmployeesAddresses(java.awt.Frame parent, Database db) {
         super(parent, true);
@@ -59,6 +63,7 @@ public class InsertEmployeesAddresses extends JDialog{
         txtDateTo = new JTextField("MM-DD-YYYY");
         btnCancelar = new JButton();
         btnInsertar = new JButton();
+        btnConfirmar = new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Employee Address");
@@ -118,7 +123,7 @@ public class InsertEmployeesAddresses extends JDialog{
         txtDateTo.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -129,7 +134,15 @@ public class InsertEmployeesAddresses extends JDialog{
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -168,6 +181,8 @@ public class InsertEmployeesAddresses extends JDialog{
                                 .addGap(50)
                                 .addComponent(btnInsertar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addGap(30)
+                                .addComponent(btnConfirmar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addGap(30)
                                 .addComponent(btnCancelar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
         );
 
@@ -204,9 +219,53 @@ public class InsertEmployeesAddresses extends JDialog{
                         .addGap(20)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
         pack();
+    }
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+        System.out.println( sql.toString() );
+
+        StringBuilder sql2=sqlFinal;
+        sql2.append(" ");
+        sql2.append("COMMIT;");
+        System.out.println( sql2.toString() );
+
+        try {
+            db.update( sql.toString() );
+            db.update( sql2.toString() );
+            JOptionPane.showMessageDialog(this, "Address added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+        System.out.println( sql.toString() );
+
+        StringBuilder sql2=sqlFinal;
+        sql2.append(" ");
+        sql2.append("ROLLBACK;");
+        System.out.println( sql2.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
     }
 
     private void obtenerEmployees() {
@@ -262,10 +321,10 @@ public class InsertEmployeesAddresses extends JDialog{
         sql.append("\'");
         sql.append(country);
         sql.append("\'");
-        sql.append(")");
+        sql.append(");");
 
 
-        System.out.println( sql.toString() );
+        sqlFinal=sql;
 
         StringBuilder sql2
                 = new StringBuilder("INSERT INTO employee_addresses (employee_id, address_id, date_address_from, date_address_to) " +
@@ -281,19 +340,9 @@ public class InsertEmployeesAddresses extends JDialog{
         sql2.append("\'");
         sql2.append(dateTo);
         sql2.append("\'");
-        sql2.append(")");
+        sql2.append(");");
 
-
-        System.out.println( sql2.toString() );
-
-        try {
-            db.update( sql.toString() );
-            db.update( sql2.toString() );
-            JOptionPane.showMessageDialog(this, "Address added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        sqlFinal2=sql2;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 }

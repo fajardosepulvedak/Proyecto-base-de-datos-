@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class InsertEmployeeOnProject extends JDialog{
+    private StringBuilder sqlFinal;
+    private StringBuilder sqlFinal2;
     private final HashMap ht;
     private final Database db;
 
@@ -28,6 +30,7 @@ public class InsertEmployeeOnProject extends JDialog{
     private JComboBox cmbProjects;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     public InsertEmployeeOnProject(java.awt.Frame parent, Database db){
         super(parent, true);
@@ -59,6 +62,7 @@ public class InsertEmployeeOnProject extends JDialog{
         cmbProjects=new JComboBox();
         btnCancelar=new JButton();
         btnInsertar=new JButton();
+        btnConfirmar=new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Employee on project");
@@ -98,7 +102,7 @@ public class InsertEmployeeOnProject extends JDialog{
         txtHoursAllocated.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -109,7 +113,15 @@ public class InsertEmployeeOnProject extends JDialog{
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar();
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar();
             }
         });
 
@@ -154,6 +166,8 @@ public class InsertEmployeeOnProject extends JDialog{
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnInsertar)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnConfirmar)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnCancelar)
                                 .addGap(20, 20, 20))
@@ -214,6 +228,7 @@ public class InsertEmployeeOnProject extends JDialog{
                                 // Fila de Botones
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnCancelar)
+                                        .addComponent(btnConfirmar)
                                         .addComponent(btnInsertar)
                                 )
                                 .addGap(20, 20, 20) // Margen inferior
@@ -222,6 +237,47 @@ public class InsertEmployeeOnProject extends JDialog{
 
         // Esto es necesario para que el contenedor se ajuste al tamaño preferido de los componentes
         pack();
+    }
+
+    private void okButtonActionPerformedConfirmar() {
+        StringBuilder sql=sqlFinal;
+        StringBuilder sql2=sqlFinal2;
+        sql.append(" ");
+        sql.append("COMMIT;");
+        sql2.append(" ");
+        sql2.append("COMMIT;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            db.update( sql2.toString() );
+            JOptionPane.showMessageDialog(this, "Employee on project add");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedCancelar() {
+        StringBuilder sql=sqlFinal;
+        StringBuilder sql2=sqlFinal2;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            db.update( sql2.toString() );
+            JOptionPane.showMessageDialog(this, "Operation Canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
     }
 
     private void okButtonActionPerformed(ActionEvent evt) {
@@ -258,23 +314,14 @@ public class InsertEmployeeOnProject extends JDialog{
         sql.append(today);
         sql.append("\',");
         sql.append(staffID);
-        sql.append(")");
+        sql.append(");");
 
-
-        System.out.println( sql.toString() );
+        sqlFinal=sql;
 
         StringBuilder sql2 = new StringBuilder("Update ref_calendar set business_day_yn = 't' Where day_date='"+fromday+"' or day_date='"+today+"';");
-        System.out.println( sql2.toString() );
+        sqlFinal2=sql2;
 
-        try {
-            db.update( sql.toString() );
-            db.update( sql2.toString() );
-            JOptionPane.showMessageDialog(this, "Employee on project added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 
     private void obtenerEmployees() {

@@ -338,7 +338,8 @@ public class InsertEmployee extends javax.swing.JDialog {
         return sup;
     }
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt)
+    {//GEN-FIRST:event_okButtonActionPerformed
 
         String fname = txtFname.getText();
         String lname = txtLname.getText();
