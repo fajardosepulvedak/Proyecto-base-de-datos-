@@ -39,8 +39,8 @@ public class InsertProject extends javax.swing.JDialog{
         jLabel6 = new JLabel();
         txtClientId = new JTextField();
         txtPname = new JTextField();
-        txtPStartDate = new JTextField("DD-MM-YYYY");
-        txtPEndDate = new JTextField("DD-MM-YYYY");
+        txtPStartDate = new JTextField("MM-DD-YYYY");
+        txtPEndDate = new JTextField("MM-DD-YYYY");
         txtPbudget = new JTextField();
         txtPdescription = new JTextArea();
         btnInsertar = new JButton();

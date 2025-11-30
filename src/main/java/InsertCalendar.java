@@ -33,7 +33,7 @@ public class InsertCalendar extends javax.swing.JDialog{
         jlabel2 = new JLabel();
         jlabel3 = new JLabel();
         jlabel4 = new JLabel();
-        txtDayDate = new JTextField("DD-MM-YYYY");
+        txtDayDate = new JTextField("MM-DD-YYYY");
         txtDayNumber = new JTextField();
         txtPeriodId = new JTextField();
         txtDayName = new JTextField();

@@ -45,7 +45,6 @@ public class MainApp extends JFrame {
         panel.add(createCard("Skills", this::openSkillsMenu));
         panel.add(createCard("Roles", this::openRolesMenu));
 
-        // **************** INICIO DE LA CORRECCIÓN ****************
         // Usar un panel intermedio para organizar las tarjetas y el escritorio
         JPanel contentPanel = new JPanel(new BorderLayout());
 
@@ -57,7 +56,6 @@ public class MainApp extends JFrame {
 
         // 3. Añadir el contentPanel al CENTRO del JFrame principal
         add(contentPanel, BorderLayout.CENTER);
-        // **************** FIN DE LA CORRECCIÓN ****************
     }
 
     private JPanel createCard(String title, Runnable action) {
@@ -125,6 +123,7 @@ public class MainApp extends JFrame {
     private void openProjectsMenu() {
         Object[] options = {
                 "Agregar proyecto",
+                "Agregar proyecto a empleado",
                 "Eliminar proyecto",
                 "Ver proyectos",
                 "Cancelar"
@@ -134,8 +133,10 @@ public class MainApp extends JFrame {
 
         switch (ch) {
             case 0 -> new InsertProject(this, db).setVisible(true);
-            case 1 -> new DeleteProjectDialog(this, db).setVisible(true);
-            case 2 -> browseTable("Projects", "SELECT * FROM projects");
+            case 1 -> new InsertEmployeeOnProject(this, db).setVisible(true);
+            case 2 -> new DeleteProjectDialog(this, db).setVisible(true);
+            case 3 -> browseTable("Projects", "SELECT * FROM projects");
+
         }
     }
 
@@ -177,6 +178,7 @@ public class MainApp extends JFrame {
         Object[] options = {
                 "Agregar skill",
                 "Agregar skill level",
+                "Agregar skill a employee",
                 "Eliminar skill",
                 "Eliminar nivel de skill",
                 "Ver skills",
@@ -188,9 +190,11 @@ public class MainApp extends JFrame {
         switch (ch) {
             case 0 -> new InsertSkills(this, db).setVisible(true);
             case 1 -> new InsertSkillLevel(this,db).setVisible(true);
-            case 2 -> new DeleteSkillDialog(this, db).setVisible(true);
-            case 3 -> new DeleteSkillLevelDialog(this, db).setVisible(true);
-            case 4 -> browseTable("Skills", "SELECT * FROM ref_skills");
+            case 2 -> new InsertEmployeeSkills(this, db).setVisible(true);
+            case 3 -> new DeleteSkillDialog(this, db).setVisible(true);
+            case 4 -> new DeleteSkillLevelDialog(this, db).setVisible(true);
+            case 5 -> browseTable("Skills", "SELECT * FROM ref_skills");
+
         }
     }
 

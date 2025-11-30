@@ -6,6 +6,7 @@
  */
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +23,31 @@ public class InsertEmployee extends javax.swing.JDialog {
      */
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton confirmarButton;
+    private javax.swing.JComboBox comboRole;
+    private javax.swing.JComboBox comboSup;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton insertButton;
+    private javax.swing.JTextField txtFname;
+    private javax.swing.JTextField txtLname;
+    private javax.swing.JTextField txtBirth;
+    private javax.swing.JTextField txtHire;
+    private javax.swing.JTextField txtSalary;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtPhone;
 
     public InsertEmployee(java.awt.Frame parent, Database db) {
         super(parent, true);
@@ -51,15 +77,16 @@ public class InsertEmployee extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         txtFname = new javax.swing.JTextField();
         txtLname = new javax.swing.JTextField();
-        txtBirth = new javax.swing.JTextField("DD-MM-YYYY");
-        txtHire = new javax.swing.JTextField("DD-MM-YYYY");
+        txtBirth = new javax.swing.JTextField("MM-DD-YYYY");
+        txtHire = new javax.swing.JTextField("MM-DD-YYYY");
         txtSalary = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
         comboRole = new javax.swing.JComboBox();
         comboSup = new javax.swing.JComboBox();
-        okButton = new javax.swing.JButton();
+        insertButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        confirmarButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Employee");
@@ -97,11 +124,6 @@ public class InsertEmployee extends javax.swing.JDialog {
 
         txtLname.setColumns(11);
         txtLname.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-//        txtLname.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                txtCiudadActionPerformed(evt);
-//            }
-//        });
 
         txtBirth.setColumns(11);
         txtBirth.setFont(new java.awt.Font("Tahoma", 0, 14));
@@ -124,11 +146,19 @@ public class InsertEmployee extends javax.swing.JDialog {
         comboSup.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboSup.setModel(new javax.swing.DefaultComboBoxModel(obtenerSupervisor().toArray(new Integer[0])));
 
-        okButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        okButton.setText("Aceptar");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
+        insertButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        insertButton.setText("Insertar");
+        insertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
+            }
+        });
+
+        confirmarButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        confirmarButton.setText("Confirmar");
+        confirmarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -136,73 +166,10 @@ public class InsertEmployee extends javax.swing.JDialog {
         cancelButton.setText("Cancelar");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
             }
         });
-/*
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboCafe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMerc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(31, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(okButton)
-                .addGap(18, 18, 18)
-                .addComponent(cancelButton)
-                .addGap(55, 55, 55))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(comboCafe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtMerc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(okButton)
-                    .addComponent(cancelButton))
-                .addGap(22, 22, 22))
-        );
-*/
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
 
@@ -237,7 +204,9 @@ public class InsertEmployee extends javax.swing.JDialog {
                                 .addContainerGap(30, Short.MAX_VALUE))
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(okButton)
+                                .addComponent(insertButton)
+                                .addGap(18)
+                                .addComponent(confirmarButton)
                                 .addGap(18)
                                 .addComponent(cancelButton)
                                 .addGap(40))
@@ -284,40 +253,49 @@ public class InsertEmployee extends javax.swing.JDialog {
                                         .addComponent(comboSup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(20)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(okButton)
+                                        .addComponent(insertButton)
+                                        .addComponent(confirmarButton)
                                         .addComponent(cancelButton))
                                 .addGap(20))
         );
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void txtCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCiudadActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCiudadActionPerformed
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Employee added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
 
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox comboRole;
-    private javax.swing.JComboBox comboSup;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JButton okButton;
-    private javax.swing.JTextField txtFname;
-    private javax.swing.JTextField txtLname;
-    private javax.swing.JTextField txtBirth;
-    private javax.swing.JTextField txtHire;
-    private javax.swing.JTextField txtSalary;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtPhone;
     // End of variables declaration//GEN-END:variables
 
     private ArrayList<String> obtenerRoles() {
@@ -373,7 +351,7 @@ public class InsertEmployee extends javax.swing.JDialog {
         int supervisor = (Integer) comboSup.getSelectedItem();
 
         StringBuilder sql
-                = new StringBuilder("INSERT INTO employees (first_name, last_name, date_of_birth, hire_date, salary, email, phone_number, role_code, supervisor_id) " +
+                = new StringBuilder("BEGIN; INSERT INTO employees (first_name, last_name, date_of_birth, hire_date, salary, email, phone_number, role_code, supervisor_id) " +
                 "VALUES (\'");
         sql.append(fname);
         sql.append("\',");
@@ -397,19 +375,10 @@ public class InsertEmployee extends javax.swing.JDialog {
         sql.append("(select role_code from ref_roles where role_name='"+role+"')");
         sql.append(",");
         sql.append(supervisor);
-        sql.append(")");
+        sql.append(");");
 
-
-        System.out.println( sql.toString() );
-
-        try {
-            db.update( sql.toString() );
-            JOptionPane.showMessageDialog(this, "Employee added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 
 }

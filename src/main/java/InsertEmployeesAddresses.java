@@ -55,8 +55,8 @@ public class InsertEmployeesAddresses extends JDialog{
         txtTwonCity = new JTextField();
         txtState = new JTextField();
         txtCountryCode = new JTextField();
-        txtDateFrom = new JTextField("DD-MM-YYYY");
-        txtDateTo = new JTextField("DD-MM-YYYY");
+        txtDateFrom = new JTextField("MM-DD-YYYY");
+        txtDateTo = new JTextField("MM-DD-YYYY");
         btnCancelar = new JButton();
         btnInsertar = new JButton();
 
@@ -211,9 +211,6 @@ public class InsertEmployeesAddresses extends JDialog{
 
     private void obtenerEmployees() {
         try {
-            // Conectar usando tu clase Database
-            Database db = Database.getDatabase("kevin", "Mark4557");
-
             // Ejecutar consulta
             ResultSet rs = db.query("SELECT first_name, employee_id FROM employees as emp WHERE NOT EXISTS " +
                     "(SELECT employee_id FROM employee_addresses as empAd WHERE emp.employee_id = empAd.employee_id)");
