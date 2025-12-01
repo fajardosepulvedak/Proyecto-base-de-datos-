@@ -9,11 +9,13 @@ import java.util.HashMap;
 public class InsertRole extends javax.swing.JDialog{
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
 
     private JLabel jlabel1;
     private JTextField txtRoleName;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     public InsertRole(java.awt.Frame parent, Database db){
         super(parent, true);
@@ -27,6 +29,7 @@ public class InsertRole extends javax.swing.JDialog{
         txtRoleName = new JTextField();
         btnCancelar = new JButton();
         btnInsertar = new JButton();
+        btnConfirmar= new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Role");
@@ -39,7 +42,7 @@ public class InsertRole extends javax.swing.JDialog{
         txtRoleName.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -50,7 +53,15 @@ public class InsertRole extends javax.swing.JDialog{
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -68,6 +79,7 @@ public class InsertRole extends javax.swing.JDialog{
                                 .addComponent(txtRoleName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
 
@@ -79,6 +91,7 @@ public class InsertRole extends javax.swing.JDialog{
                                 .addComponent(txtRoleName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
 
@@ -87,16 +100,10 @@ public class InsertRole extends javax.swing.JDialog{
 
     }
 
-    private void okButtonActionPerformed(ActionEvent evt) {
-        String roleName = txtRoleName.getText();
-        StringBuilder sql
-                = new StringBuilder("INSERT INTO ref_roles (role_name) " +
-                "VALUES (");
-        sql.append("\'");
-        sql.append(roleName);
-        sql.append("\',");
-        sql.append(")");
-
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
 
         System.out.println( sql.toString() );
 
@@ -108,6 +115,36 @@ public class InsertRole extends javax.swing.JDialog{
             System.out.println( ex.getMessage() );
         }
         setVisible(false);
+    }
 
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformed(ActionEvent evt) {
+        String roleName = txtRoleName.getText();
+        StringBuilder sql
+                = new StringBuilder("INSERT INTO ref_roles (role_name) " +
+                "VALUES (");
+        sql.append("\'");
+        sql.append(roleName);
+        sql.append("\'");
+        sql.append(");");
+
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 }

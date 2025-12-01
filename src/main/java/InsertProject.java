@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 public class InsertProject extends javax.swing.JDialog{
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
 
     public InsertProject(java.awt.Frame parent, Database db) {
         super(parent, true);
@@ -29,6 +31,7 @@ public class InsertProject extends javax.swing.JDialog{
     private JTextArea txtPdescription;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     private void initComponents() {
         jLabel1 = new JLabel();
@@ -45,6 +48,7 @@ public class InsertProject extends javax.swing.JDialog{
         txtPdescription = new JTextArea();
         btnInsertar = new JButton();
         btnCancelar = new JButton();
+        btnConfirmar=new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Project");
@@ -87,7 +91,7 @@ public class InsertProject extends javax.swing.JDialog{
         txtPdescription.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -98,7 +102,15 @@ public class InsertProject extends javax.swing.JDialog{
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -128,6 +140,8 @@ public class InsertProject extends javax.swing.JDialog{
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnInsertar)
                                 .addGap(20)
+                                .addComponent(btnConfirmar)
+                                .addGap(20)
                                 .addComponent(btnCancelar))
         );
 
@@ -154,13 +168,48 @@ public class InsertProject extends javax.swing.JDialog{
                         .addGap(20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
 
         pack();
         
     }
-    
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Project added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         int clientId= Integer.parseInt(txtClientId.getText());
         String Pname = txtPname.getText();
@@ -191,19 +240,11 @@ public class InsertProject extends javax.swing.JDialog{
         sql.append("\'");
         sql.append(description);
         sql.append("\'");
-        sql.append(")");
+        sql.append(");");
 
 
-        System.out.println( sql.toString() );
-
-        try {
-            db.update( sql.toString() );
-            JOptionPane.showMessageDialog(this, "Project added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
     }
 

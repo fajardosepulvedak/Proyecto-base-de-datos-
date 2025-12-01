@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class InsertSkillLevel extends javax.swing.JDialog {
     private final HashMap ht;
     private final Database db;
+    private StringBuilder sqlFinal;
 
     private JLabel jlabel1;
     private JLabel jlabel2;
@@ -15,6 +16,7 @@ public class InsertSkillLevel extends javax.swing.JDialog {
     private JTextField txtExp;
     private JButton btnInsertar;
     private JButton btnCancelar;
+    private JButton btnConfirmar;
 
     public InsertSkillLevel(java.awt.Frame parent, Database db){
         super(parent, true);
@@ -29,6 +31,7 @@ public class InsertSkillLevel extends javax.swing.JDialog {
         txtExp=new JTextField();
         btnInsertar = new JButton();
         btnCancelar = new JButton();
+        btnConfirmar = new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert Skill Level");
@@ -47,7 +50,7 @@ public class InsertSkillLevel extends javax.swing.JDialog {
         txtExp.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnInsertar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnInsertar.setText("Aceptar");
+        btnInsertar.setText("Insertar");
         btnInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -58,7 +61,15 @@ public class InsertSkillLevel extends javax.swing.JDialog {
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setVisible(false);
+                okButtonActionPerformedCancelar(evt);
+            }
+        });
+
+        btnConfirmar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnConfirmar.setText("Confirmar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformedConfirmar(evt);
             }
         });
 
@@ -80,6 +91,7 @@ public class InsertSkillLevel extends javax.swing.JDialog {
                                         .addComponent(txtExp)))
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
 
@@ -94,11 +106,46 @@ public class InsertSkillLevel extends javax.swing.JDialog {
                                 .addComponent(txtExp))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnInsertar)
+                                .addComponent(btnConfirmar)
                                 .addComponent(btnCancelar))
         );
 
         pack();
         setLocationRelativeTo(null);
+    }
+
+    private void okButtonActionPerformedCancelar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("ROLLBACK;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Operation canceled");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
+    }
+
+    private void okButtonActionPerformedConfirmar(ActionEvent evt) {
+        StringBuilder sql=sqlFinal;
+        sql.append(" ");
+        sql.append("COMMIT;");
+
+        System.out.println( sql.toString() );
+
+        try {
+            db.update( sql.toString() );
+            JOptionPane.showMessageDialog(this, "Skill level added");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error");
+            System.out.println( ex.getMessage() );
+        }
+        setVisible(false);
     }
 
     private void okButtonActionPerformed(ActionEvent evt) {
@@ -112,19 +159,11 @@ public class InsertSkillLevel extends javax.swing.JDialog {
         sql.append(skillLevelName);
         sql.append("\',");
         sql.append(exp);
-        sql.append(")");
+        sql.append(");");
 
 
-        System.out.println( sql.toString() );
-
-        try {
-            db.update( sql.toString() );
-            JOptionPane.showMessageDialog(this, "Skill Level added");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error");
-            System.out.println( ex.getMessage() );
-        }
-        setVisible(false);
+        sqlFinal=sql;
+        JOptionPane.showMessageDialog(this, "Datos listos para insertar");
     }
 }
 
