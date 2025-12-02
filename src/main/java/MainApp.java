@@ -109,14 +109,14 @@ public class MainApp extends JFrame {
         int ch = showMenu("Empleados", options);
 
         switch (ch) {
-            case 0: new InsertEmployee(this, db).setVisible(true);
-            case 1: new DeleteEmployeeDialog(this, db).setVisible(true);
-            case 2: new DeleteEmployeeSkillDialog(this, db).setVisible(true);
-            case 3: new DeleteEmployeeOnProjectDialog(this, db).setVisible(true);
-            case 4: browseTable("Employees", "SELECT first_name, last_name, salary FROM employees");
-            case 5: browseTable("Employees contact", "SELECT first_name, email, phone_number FROM employees");
+            case 0: new InsertEmployee(this, db).setVisible(true); break;
+            case 1: new DeleteEmployeeDialog(this, db).setVisible(true); break;
+            case 2: new DeleteEmployeeSkillDialog(this, db).setVisible(true); break;
+            case 3: new DeleteEmployeeOnProjectDialog(this, db).setVisible(true); break;
+            case 4: browseTable("Employees", "SELECT first_name, last_name, salary FROM employees"); break;
+            case 5: browseTable("Employees contact", "SELECT first_name, email, phone_number FROM employees"); break;
             case 6: browseTable("Employees contact", "SELECT E.first_name, E.last_name, P.project_name FROM" +
-                    " employees AS E JOIN employee_on_projects AS EP ON E.employee_id = EP.employee_id JOIN projects AS P ON EP.project_id = P.project_id;");
+                    " employees AS E JOIN employee_on_projects AS EP ON E.employee_id = EP.employee_id JOIN projects AS P ON EP.project_id = P.project_id;"); break;
         }
     }
 
@@ -132,10 +132,10 @@ public class MainApp extends JFrame {
         int ch = showMenu("Proyectos", options);
 
         switch (ch) {
-            case 0: new InsertProject(this, db).setVisible(true);
-            case 1: new InsertEmployeeOnProject(this, db).setVisible(true);
-            case 2: new DeleteProjectDialog(this, db).setVisible(true);
-            case 3: browseTable("Projects", "SELECT * FROM projects");
+            case 0: new InsertProject(this, db).setVisible(true); break;
+            case 1: new InsertEmployeeOnProject(this, db).setVisible(true); break;
+            case 2: new DeleteProjectDialog(this, db).setVisible(true); break;
+            case 3: browseTable("Projects", "SELECT * FROM projects"); break;
 
         }
     }
@@ -151,9 +151,9 @@ public class MainApp extends JFrame {
         int ch = showMenu("Direcciones", options);
 
         switch (ch) {
-            case 0: new InsertEmployeesAddresses(this, db).setVisible(true);
-            case 1: new DeleteAddressDialog(this, db).setVisible(true);
-            case 2: browseTable("Addresses", "SELECT * FROM addresses");
+            case 0: new InsertEmployeesAddresses(this, db).setVisible(true); break;
+            case 1: new DeleteAddressDialog(this, db).setVisible(true); break;
+            case 2: browseTable("Addresses", "SELECT * FROM addresses"); break;
         }
     }
 
@@ -168,9 +168,9 @@ public class MainApp extends JFrame {
         int ch = showMenu("Calendario", options);
 
         switch (ch) {
-            case 0: new InsertCalendar(this, db).setVisible(true);
-            case 1: new DeleteCalendarDateDialog(this, db).setVisible(true);
-            case 2: browseTable("Calendar", "SELECT * FROM ref_calendar");
+            case 0: new InsertCalendar(this, db).setVisible(true); break;
+            case 1: new DeleteCalendarDateDialog(this, db).setVisible(true); break;
+            case 2: browseTable("Calendar", "SELECT * FROM ref_calendar"); break;
         }
     }
 
@@ -188,12 +188,12 @@ public class MainApp extends JFrame {
         int ch = showMenu("Skills", options);
 
         switch (ch) {
-            case 0: new InsertSkills(this, db).setVisible(true);
-            case 1: new InsertSkillLevel(this,db).setVisible(true);
-            case 2: new InsertEmployeeSkills(this, db).setVisible(true);
-            case 3: new DeleteSkillDialog(this, db).setVisible(true);
-            case 4: new DeleteSkillLevelDialog(this, db).setVisible(true);
-            case 5: browseTable("Skills", "SELECT * FROM ref_skills");
+            case 0: new InsertSkills(this, db).setVisible(true); break;
+            case 1: new InsertSkillLevel(this,db).setVisible(true); break;
+            case 2: new InsertEmployeeSkills(this, db).setVisible(true); break;
+            case 3: new DeleteSkillDialog(this, db).setVisible(true); break;
+            case 4: new DeleteSkillLevelDialog(this, db).setVisible(true); break;
+            case 5: browseTable("Skills", "SELECT * FROM ref_skills"); break;
 
         }
     }
