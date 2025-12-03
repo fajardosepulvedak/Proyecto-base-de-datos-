@@ -46,6 +46,8 @@ import java.util.logging.Logger;
         private javax.swing.JMenuItem verEmpleados;
         private javax.swing.JMenuItem verContacto;
         private javax.swing.JMenuItem verFechasMenu;
+        private javax.swing.JMenuItem verSkillLevels;
+        private javax.swing.JMenuItem updateSkillMenu;
         /**
          * Creates new form MainApp
          */
@@ -123,7 +125,11 @@ import java.util.logging.Logger;
             verEmpleados = new JMenuItem();
             verContacto = new JMenuItem();
             verFechasMenu = new JMenuItem();
+            verSkillLevels = new JMenuItem();
+            updateSkillMenu = new JMenuItem();
 
+            setTitle("Employees working at house");
+            setResizable(false);
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
             employeesMenu.setText("Employees");
@@ -349,6 +355,14 @@ import java.util.logging.Logger;
             });
             skillMenu.add(eliminarSkill);
 
+            updateSkillMenu.setText("Actualizar skill");
+            updateSkillMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    updateSkill(evt);
+                }
+            });
+            skillMenu.add(updateSkillMenu);
+
             verSkill.setText("Ver skill");
             verSkill.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,6 +370,14 @@ import java.util.logging.Logger;
                 }
             });
             skillMenu.add(verSkill);
+
+            verSkillLevels.setText("Ver skill levels");
+            verSkillLevels.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    getSkillLevel(evt);
+                }
+            });
+            skillMenu.add(verSkillLevels);
 
             menuBar.add(skillMenu);
 
@@ -589,6 +611,11 @@ import java.util.logging.Logger;
         DeleteSkillLevelDialog dialogo = new DeleteSkillLevelDialog(this, db);
         dialogo.setVisible(true);
     }
+
+    private void updateSkill(java.awt.event.ActionEvent evt) {
+            UpdateSkill dialogo = new UpdateSkill(this, db);
+            dialogo.setVisible(true);
+        }
 
     private void getSkills(java.awt.event.ActionEvent evt) {
         final String sql = "SELECT * FROM ref_skills";
