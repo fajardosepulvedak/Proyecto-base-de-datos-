@@ -310,7 +310,7 @@ import java.util.logging.Logger;
             eliminarRoleMenu.setText("Eliminar");
             eliminarRoleMenu.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    //deleteRole(evt);
+                    deleteRole(evt);
                 }
             });
             menuRole.add(eliminarRoleMenu);
@@ -606,10 +606,10 @@ import java.util.logging.Logger;
         dialogo.setVisible(true);
     }
 
-//    private void deleteRole(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
-//        DeleteRoleDialog dialogo = new DeleteRoleDialog(this, db);
-//        dialogo.setVisible(true);
-//    }
+    private void deleteRole(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        DeleteRolesDialog dialogo = new DeleteRolesDialog(this, db);
+        dialogo.setVisible(true);
+    }
 
     private void getRoles(java.awt.event.ActionEvent evt) {
         final String sql = "SELECT * FROM ref_roles";
@@ -712,7 +712,7 @@ import java.util.logging.Logger;
             "e.first_name || ' ' || e.last_name AS \"Empleado\", " +
             "r.role_name AS \"Rol\", " +
             "p.project_status AS \"Estado\" " +
-            "FROM employees_on_projects eop " +
+            "FROM employee_on_projects eop " +
             "LEFT JOIN employees e ON eop.employee_id = e.employee_id " +
             "LEFT JOIN projects p ON eop.project_id = p.project_id " +
             "LEFT JOIN ref_roles r ON e.role_code = r.role_code " +
@@ -772,7 +772,7 @@ private void generarInforme3(java.awt.event.ActionEvent evt) {
             "p.project_start_date AS \"Inicio\", " +
             "p.project_end_date AS \"Fin\" " +
             "FROM projects p " +
-            "LEFT JOIN employees_on_projects eop ON p.project_id = eop.project_id " +
+            "LEFT JOIN employee_on_projects eop ON p.project_id = eop.project_id " +
             "GROUP BY p.project_id, p.project_name, p.project_status, p.project_budget, " +
             "p.project_start_date, p.project_end_date " +
             "ORDER BY p.project_budget DESC";
