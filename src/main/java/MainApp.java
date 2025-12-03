@@ -381,6 +381,38 @@ import java.util.logging.Logger;
 
             menuBar.add(skillMenu);
 
+            menuInformes = new javax.swing.JMenu();
+            menuInformes.setText("Informes");
+
+            informe1MenuItem = new javax.swing.JMenuItem();
+            informe1MenuItem.setText("Informe 1: Empleados en Proyectos");
+            informe1MenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            generarInforme1(evt);
+                }
+            });
+            menuInformes.add(informe1MenuItem);
+
+            informe2MenuItem = new javax.swing.JMenuItem();
+            informe2MenuItem.setText("Informe 2: Skills por Empleado");
+            informe2MenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generarInforme2(evt);
+                }
+                });
+            menuInformes.add(informe2MenuItem);
+
+            informe3MenuItem = new javax.swing.JMenuItem();
+            informe3MenuItem.setText("Informe 3: Proyectos y Presupuestos");
+            informe3MenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    generarInforme3(evt);
+                }
+            });
+            menuInformes.add(informe3MenuItem);
+
+            menuBar.add(menuInformes);
+
             setJMenuBar(menuBar);
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -670,6 +702,92 @@ import java.util.logging.Logger;
 
         }
     }
+        private void generarInforme1(java.awt.event.ActionEvent evt) {
+    final String sql = "SELECT " +
+            "p.project_name AS \"Proyecto\", " +
+            "e.first_name || ' ' || e.last_name AS \"Empleado\", " +
+            "r.role_name AS \"Rol\", " +
+            "p.project_status AS \"Estado\" " +
+            "FROM employees_on_projects eop " +
+            "LEFT JOIN employees e ON eop.employee_id = e.employee_id " +
+            "LEFT JOIN projects p ON eop.project_id = p.project_id " +
+            "LEFT JOIN ref_roles r ON e.role_code = r.role_code " +
+            "ORDER BY p.project_name, e.last_name";
+    
+    try {
+        ResultSet rs = db.query(sql);
+        JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
+        TableBrowser browser = new TableBrowser("Informe 1: Empleados en Proyectos", modelo);
+        browser.setVisible(true);
+        this.desktopPane.add(browser);
+    } catch (SQLException ex) {
+        LOGGER.severe("Error: " + ex.getMessage());
+        LOGGER.severe("Código: " + ex.getErrorCode());
+        JOptionPane.showMessageDialog(this, 
+            "Error al generar informe: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void generarInforme2(java.awt.event.ActionEvent evt) {
+    final String sql = "SELECT " +
+            "e.first_name || ' ' || e.last_name AS \"Empleado\", " +
+            "COUNT(es.skill_code) AS \"Total Skills\", " +
+            "STRING_AGG(s.skill_name, ', ') AS \"Skills\", " +
+            "ROUND(AVG(sl.experience_required_years), 1) AS \"Experiencia Promedio (años)\" " +
+            "FROM employees e " +
+            "LEFT JOIN employee_skills es ON e.employee_id = es.employee_id " +
+            "LEFT JOIN ref_skills s ON es.skill_code = s.skill_code " +
+            "LEFT JOIN ref_skill_levels sl ON es.skill_level_code = sl.skill_level_code " +
+            "GROUP BY e.employee_id, e.first_name, e.last_name " +
+            "ORDER BY COUNT(es.skill_code) DESC";
+    
+    try {
+        ResultSet rs = db.query(sql);
+        JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
+        TableBrowser browser = new TableBrowser("Informe 2: Resumen de Skills por Empleado", modelo);
+        browser.setVisible(true);
+        this.desktopPane.add(browser);
+    } catch (SQLException ex) {
+        LOGGER.severe("Error: " + ex.getMessage());
+        LOGGER.severe("Código: " + ex.getErrorCode());
+        JOptionPane.showMessageDialog(this, 
+            "Error al generar informe: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void generarInforme3(java.awt.event.ActionEvent evt) {
+    final String sql = "SELECT " +
+            "p.project_name AS \"Proyecto\", " +
+            "p.project_status AS \"Estado\", " +
+            "p.project_budget AS \"Presupuesto\", " +
+            "COUNT(eop.employee_id) AS \"# Empleados\", " +
+            "p.project_start_date AS \"Inicio\", " +
+            "p.project_end_date AS \"Fin\" " +
+            "FROM projects p " +
+            "LEFT JOIN employees_on_projects eop ON p.project_id = eop.project_id " +
+            "GROUP BY p.project_id, p.project_name, p.project_status, p.project_budget, " +
+            "p.project_start_date, p.project_end_date " +
+            "ORDER BY p.project_budget DESC";
+    
+    try {
+        ResultSet rs = db.query(sql);
+        JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
+        TableBrowser browser = new TableBrowser("Informe 3: Proyectos, Presupuestos y Equipos", modelo);
+        browser.setVisible(true);
+        this.desktopPane.add(browser);
+    } catch (SQLException ex) {
+        LOGGER.severe("Error: " + ex.getMessage());
+        LOGGER.severe("Código: " + ex.getErrorCode());
+        JOptionPane.showMessageDialog(this, 
+            "Error al generar informe: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
 
 }
 
