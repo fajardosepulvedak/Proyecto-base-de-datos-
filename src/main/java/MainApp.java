@@ -48,6 +48,10 @@ import java.util.logging.Logger;
         private javax.swing.JMenuItem verFechasMenu;
         private javax.swing.JMenuItem verSkillLevels;
         private javax.swing.JMenuItem updateSkillMenu;
+        private javax.swing.JMenu menuInformes;
+        private javax.swing.JMenuItem informe1MenuItem;
+        private javax.swing.JMenuItem informe2MenuItem;
+        private javax.swing.JMenuItem informe3MenuItem;
         /**
          * Creates new form MainApp
          */
