@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel; 
 
     public class MainApp extends javax.swing.JFrame {
 
@@ -52,6 +56,7 @@ import java.util.logging.Logger;
         private javax.swing.JMenuItem informe1MenuItem;
         private javax.swing.JMenuItem informe2MenuItem;
         private javax.swing.JMenuItem informe3MenuItem;
+        private JLabel backgroundLabel;
         /**
          * Creates new form MainApp
          */
@@ -60,7 +65,10 @@ import java.util.logging.Logger;
             db = Database.getDatabase(USER, PASS);
             initComponents();
             this.setSize(800, 600);
+            agregarImagenFondo();
+            
         }
+        
 
         /**
          * @param args the command line arguments
@@ -790,6 +798,26 @@ private void generarInforme3(java.awt.event.ActionEvent evt) {
             "Error al generar informe: " + ex.getMessage(), 
             "Error", 
             JOptionPane.ERROR_MESSAGE);
+    }
+}
+        private void agregarImagenFondo() {
+    try {
+        
+        URL url = new URL("https://i.imgur.com/5Nv6Oy9.gif");
+        ImageIcon icon = new ImageIcon(url);
+        
+        
+        Image img = icon.getImage();
+        Image imgScale = img.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(imgScale);
+        
+        backgroundLabel = new JLabel(scaledIcon);
+        backgroundLabel.setBounds(0, 0, 800, 600);
+        
+        desktopPane.add(backgroundLabel, Integer.valueOf(Integer.MIN_VALUE));
+        
+    } catch (Exception e) {
+        LOGGER.severe("No se pudo cargar la imagen: " + e.getMessage());
     }
 }
 
