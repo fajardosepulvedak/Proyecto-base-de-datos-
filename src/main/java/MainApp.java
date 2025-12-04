@@ -3,9 +3,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.awt.Image;
-import java.net.URL;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel; 
+import javax.swing.JLabel;
+import java.awt.Graphics;
+import java.awt.BorderLayout;
 
     public class MainApp extends javax.swing.JFrame {
 
@@ -103,7 +104,16 @@ import javax.swing.JLabel;
         // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
         private void initComponents() {
 
-            desktopPane = new javax.swing.JDesktopPane();
+            desktopPane = new javax.swing.JDesktopPane() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (backgroundLabel != null && backgroundLabel.getIcon() != null) {
+                        Image img = ((ImageIcon) backgroundLabel.getIcon()).getImage();
+                        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                    }
+                }
+            };
             menuBar = new javax.swing.JMenuBar();
             employeesMenu = new javax.swing.JMenu();
             agregarEmployee = new javax.swing.JMenuItem();
@@ -427,19 +437,9 @@ import javax.swing.JLabel;
 
             setJMenuBar(menuBar);
 
-            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-            getContentPane().setLayout(layout);
-            layout.setHorizontalGroup(
-                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
-            );
-            layout.setVerticalGroup(
-                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-            );
-
-            pack();
-        }// </editor-fold>//GEN-END:initComponents
+            getContentPane().setLayout(new java.awt.BorderLayout());
+            getContentPane().add(desktopPane, java.awt.BorderLayout.CENTER);
+        }
 
     //METODOS
 
@@ -520,7 +520,7 @@ import javax.swing.JLabel;
             pr.setVisible(true);
             }
 
-    private void getProyectos(java.awt.event.ActionEvent evt) {
+        private void getProyectos(java.awt.event.ActionEvent evt) {
         final String sql = "SELECT project_name, project_status, project_budget, project_description FROM projects";
         try {
             ResultSet rs = db.query(sql);
@@ -801,25 +801,27 @@ private void generarInforme3(java.awt.event.ActionEvent evt) {
     }
 }
         private void agregarImagenFondo() {
-    try {
-        
-        URL url = new URL("https://i.imgur.com/5Nv6Oy9.gif");
-        ImageIcon icon = new ImageIcon(url);
-        
-        
-        Image img = icon.getImage();
-        Image imgScale = img.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(imgScale);
-        
-        backgroundLabel = new JLabel(scaledIcon);
-        backgroundLabel.setBounds(0, 0, 800, 600);
-        
-        desktopPane.add(backgroundLabel, Integer.valueOf(Integer.MIN_VALUE));
-        
-    } catch (Exception e) {
-        LOGGER.severe("No se pudo cargar la imagen: " + e.getMessage());
-    }
-}
+            try {
+                ImageIcon icon = new ImageIcon("fondito.gif");
+
+                if (icon.getIconWidth() > 0) {
+                    System.out.println("✓ Imagen encontrada: " + icon.getIconWidth() + "x" + icon.getIconHeight());
+
+                    backgroundLabel = new JLabel(icon);
+
+
+                    desktopPane.repaint();
+
+                    System.out.println("✓ Fondo configurado");
+                } else {
+                    System.out.println("✗ No se pudo cargar la imagen");
+                }
+
+            } catch (Exception e) {
+                System.out.println("✗ Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
 
 }
 
