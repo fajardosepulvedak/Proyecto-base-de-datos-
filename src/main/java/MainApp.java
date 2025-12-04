@@ -58,9 +58,9 @@ import java.awt.BorderLayout;
         private javax.swing.JMenuItem informe2MenuItem;
         private javax.swing.JMenuItem informe3MenuItem;
         private JLabel backgroundLabel;
-        /**
-         * Creates new form MainApp
-         */
+        private javax.swing.JMenuItem updateRoleMenu;
+        private javax.swing.JMenuItem updateAddressMenu;
+
         public MainApp() {
             //Abrir la conexión a la base de datos
             db = Database.getDatabase(USER, PASS);
@@ -284,7 +284,14 @@ import java.awt.BorderLayout;
                 }
             });
             menuDirecciones.add(verDirecciones);
-
+            updateAddressMenu = new javax.swing.JMenuItem();
+            updateAddressMenu.setText("Actualizar dirección");
+            updateAddressMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    updateAddressMethod(evt);
+                }
+            });
+            menuDirecciones.add(updateAddressMenu);
             menuBar.add(menuDirecciones);
 
             menuCalendario.setText("Calendario");
@@ -432,6 +439,14 @@ import java.awt.BorderLayout;
                 }
             });
             menuInformes.add(informe3MenuItem);
+            updateRoleMenu = new javax.swing.JMenuItem();
+            updateRoleMenu.setText("Actualizar role");
+            updateRoleMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    updateRoleMethod(evt);
+                }
+            });
+            menuRole.add(updateRoleMenu);
 
             menuBar.add(menuInformes);
 
@@ -821,6 +836,15 @@ private void generarInforme3(java.awt.event.ActionEvent evt) {
                 System.out.println("✗ Error: " + e.getMessage());
                 e.printStackTrace();
             }
+        }
+        private void updateRoleMethod(java.awt.event.ActionEvent evt) {
+            UpdateRole dialogo = new UpdateRole(this, db);
+            dialogo.setVisible(true);
+        }
+
+        private void updateAddressMethod(java.awt.event.ActionEvent evt) {
+            UpdateAddress dialogo = new UpdateAddress(this, db);
+            dialogo.setVisible(true);
         }
 
 }
