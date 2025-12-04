@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -60,6 +61,7 @@ import java.awt.BorderLayout;
         private JLabel backgroundLabel;
         private javax.swing.JMenuItem updateRoleMenu;
         private javax.swing.JMenuItem updateAddressMenu;
+        private javax.swing.JMenuItem verProjectsEmployee;
 
         public MainApp() {
             //Abrir la conexión a la base de datos
@@ -149,6 +151,7 @@ import java.awt.BorderLayout;
             verFechasMenu = new JMenuItem();
             verSkillLevels = new JMenuItem();
             updateSkillMenu = new JMenuItem();
+            verProjectsEmployee=new JMenuItem();
 
             setTitle("Employees working at house");
             setResizable(false);
@@ -248,6 +251,14 @@ import java.awt.BorderLayout;
                 }
             });
             projectsMenu.add(verProjects);
+
+            verProjectsEmployee.setText("Ver employee projects");
+            verProjectsEmployee.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    getProjectEmployee(evt);
+                }
+            });
+            projectsMenu.add(verProjectsEmployee);
 
             verFechasMenu.setText("Fechas inicio/fin");
             verFechasMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -456,7 +467,9 @@ import java.awt.BorderLayout;
             getContentPane().add(desktopPane, java.awt.BorderLayout.CENTER);
         }
 
-    //METODOS
+
+
+        //METODOS
 
         private void insertarEmployee(java.awt.event.ActionEvent evt) {
             InsertEmployee emp = new InsertEmployee(this, db);
@@ -552,6 +565,24 @@ import java.awt.BorderLayout;
         }
     }
 
+        private void getProjectEmployee(ActionEvent evt) {
+            final String sql = "SELECT e.first_name, e.last_name, p.project_name FROM employees e JOIN employee_on_projects ep ON e.employee_id=ep.employee_id JOIN projects p ON p.project_id=ep.project_id";
+            try {
+                ResultSet rs = db.query(sql);
+
+                JDBCTableAdapter modelo = new JDBCTableAdapter(rs);
+                TableBrowser browser = new TableBrowser("Employee on Projects", modelo);
+                browser.setVisible(true);
+                this.desktopPane.add(browser);
+
+            } catch (SQLException ex) {
+                LOGGER.severe("Error: " + ex.getMessage());
+                LOGGER.severe("Codigo : " + ex.getErrorCode());
+
+            }
+
+        }
+
     private void getDatesProjects(java.awt.event.ActionEvent evt) {
         final String sql = "SELECT project_name, project_start_date, project_end_date FROM projects";
         try {
@@ -608,7 +639,7 @@ import java.awt.BorderLayout;
 
     private void getAddresses(java.awt.event.ActionEvent evt) {
         final String sql = "SELECT e.first_name, a.line_1, a.line_2, a.line_3, a.town_city, a.state_province, a.country_code FROM" +
-                " employees e LEFT JOIN employee_addresses ea ON e.employee_id = ea.employee_id LEFT JOIN addresses a ON a.address_id= ea.address_id";
+                " employees e JOIN employee_addresses ea ON e.employee_id = ea.employee_id JOIN addresses a ON a.address_id= ea.address_id";
         try {
             ResultSet rs = db.query(sql);
 

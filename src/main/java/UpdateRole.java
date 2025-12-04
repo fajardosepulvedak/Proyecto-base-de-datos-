@@ -9,10 +9,8 @@ public class UpdateRole extends JDialog{
     private final Database db;
 
     private JLabel label1;
-    private JLabel label2;
     private JComboBox cmbRole;
     private JTextField txtRoleName;
-    private JTextField txtRoleDescription;
     private JButton btnUpdate;
     private JButton btnCancelar;
     private JButton btnCargar;
@@ -27,9 +25,7 @@ public class UpdateRole extends JDialog{
 
     private void initComponents() {
         label1=new JLabel();
-        label2=new JLabel();
         txtRoleName=new JTextField();
-        txtRoleDescription=new JTextField();
         btnUpdate=new JButton();
         btnCancelar=new JButton();
         btnCargar=new JButton();
@@ -41,16 +37,11 @@ public class UpdateRole extends JDialog{
 
         label1.setFont(new java.awt.Font("Tahoma", 1, 14));
         label1.setText("Role name:");
-        label2.setFont(new java.awt.Font("Tahoma", 1, 14));
-        label2.setText("Role description:");
 
         cmbRole.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         txtRoleName.setColumns(11);
         txtRoleName.setFont(new java.awt.Font("Tahoma", 0, 14));
-
-        txtRoleDescription.setColumns(11);
-        txtRoleDescription.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         btnUpdate.setFont(new java.awt.Font("Tahoma", 0, 14));
         btnUpdate.setText("Actualizar");
@@ -89,10 +80,6 @@ public class UpdateRole extends JDialog{
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(txtRoleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtRoleDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
                                                 .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnCargar))
@@ -115,10 +102,6 @@ public class UpdateRole extends JDialog{
                                         .addComponent(txtRoleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(label2)
-                                        .addComponent(txtRoleDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnUpdate)
                                         .addComponent(btnCancelar))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -132,10 +115,8 @@ public class UpdateRole extends JDialog{
         String roleCode = role.split(" - ")[0];
 
         String roleName = txtRoleName.getText();
-        String roleDescription = txtRoleDescription.getText();
 
-        StringBuilder sql = new StringBuilder("UPDATE ref_roles SET role_name='"+roleName+"', " +
-                "role_description='"+roleDescription+"' WHERE role_code='"+roleCode+"'");
+        StringBuilder sql = new StringBuilder("UPDATE ref_roles SET role_name='"+roleName+"' WHERE role_code='"+roleCode+"'");
 
         System.out.println(sql.toString());
 
@@ -170,16 +151,13 @@ public class UpdateRole extends JDialog{
         String role = cmbRole.getSelectedItem().toString();
         String roleCode = role.split(" - ")[0];
 
-        final String sql = "SELECT role_name, role_description FROM ref_roles WHERE role_code='"+roleCode+"'";
+        final String sql = "SELECT role_name FROM ref_roles WHERE role_code='"+roleCode+"'";
         try {
             ResultSet rs = db.query(sql);
             if (rs != null) {
                 if (rs.next()) {
                     String roleName = rs.getString("role_name");
-                    String roleDescription = rs.getString("role_description");
-
                     txtRoleName.setText(roleName);
-                    txtRoleDescription.setText(roleDescription);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "No se encontraron datos para el role seleccionado",

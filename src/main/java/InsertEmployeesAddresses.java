@@ -94,7 +94,7 @@ public class InsertEmployeesAddresses extends JDialog{
         jLabel8.setText("Date address from:");
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel9.setText("Date address from:");
+        jLabel9.setText("Date address to:");
 
         comboEmployee.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -231,13 +231,14 @@ public class InsertEmployeesAddresses extends JDialog{
         sql.append("COMMIT;");
         System.out.println( sql.toString() );
 
-        StringBuilder sql2=sqlFinal;
-        sql2.append(" ");
-        sql2.append("COMMIT;");
-        System.out.println( sql2.toString() );
-
         try {
             db.update( sql.toString() );
+
+            StringBuilder sql2=sqlFinal2;
+            sql2.append(" ");
+            sql2.append("COMMIT;");
+            System.out.println( sql2.toString() );
+
             db.update( sql2.toString() );
             JOptionPane.showMessageDialog(this, "Address added");
         } catch (SQLException ex) {
