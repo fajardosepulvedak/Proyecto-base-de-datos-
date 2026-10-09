@@ -3,15 +3,15 @@ Este proyecto es un programa CRUD para administrar a empleados que trabajan desd
 El programa esta creado con Java y Java Swing y posee una base de datos PostgreSQL que, para ser usada, se debe crear el usuario "kevin" con la contraseña "root" o modificar el archivo sql, todo el sistema está configurado para ser ejecutado de manera local.
 
 ## Autores
-- Kevin Fajardo Sepulveda
-- Mia Karolina Lujan Villavicencio
-- Carlos
+- Kevin Fajardo Sepulveda.
+- Mia Karolina Lujan Villavicencio.
+- Carlos Santa Cruz Velarde.
 
 ## Requisitos
-- Java
-- JDK 17
-- Java Swing
-- PostgreSQL
+- Java.
+- JDK 17.
+- Java Swing.
+- PostgreSQL.
 
 ## Contenido
 Tenemos la pantalla principal donde se puede acceder a cada apartado
