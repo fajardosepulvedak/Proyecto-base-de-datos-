@@ -2,6 +2,17 @@
 Este proyecto es un programa CRUD para administrar a empleados que trabajan desde casa, puedes realizar acciones como: agregar empleados, asignarles trabajo, colocar sus habilidades, el nivel de habilidad, entre otras cosas. <br>
 El programa esta creado con Java y Java Swing y posee una base de datos PostgreSQL que, para ser usada, se debe crear el usuario "kevin" con la contraseña "root" o modificar el archivo sql, todo el sistema está configurado para ser ejecutado de manera local.
 
+## Autores
+- Kevin Fajardo Sepulveda
+- Mia Karolina Lujan Villavicencio
+- Carlos
+
+## Requisitos
+- Java
+- JDK 17
+- Java Swing
+- PostgreSQL
+
 ## Contenido
 Tenemos la pantalla principal donde se puede acceder a cada apartado
 <img width="1171" height="882" alt="image" src="https://github.com/user-attachments/assets/1162e722-0139-4933-b718-d396cfa126aa" />
